@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package task.v1.command;
+
+import "google/protobuf/timestamp.proto";
+import "task/v1/common/task.proto";
+
+option go_package = "task-management-app/protobuf/gen/task/v1/command;commandpb";
+
+// TaskCommandService はタスクの作成・更新・削除を担うコマンド側サービス
+service TaskCommandService {
+  // CreateTask はタスクを新規作成する
+  rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+
+  // MoveTask はタスクを別カラム/別ポジションへ移動する
+  rpc MoveTask(MoveTaskRequest) returns (MoveTaskResponse);
+
+  // EditTask はタスクのタイトル/説明/優先度を編集する
+  rpc EditTask(EditTaskRequest) returns (EditTaskResponse);
+
+  // DeleteTask はタスクを削除する
+  rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse);
+}
+
+// ---------- CreateTask ----------
+
+message CreateTaskRequest {
+  int32 user_id = 1;
+  string title = 2;
+  string description = 3;
+  // priority 未指定時は medium が採用される（サーバー側のデフォルト）
+  task.v1.common.Priority priority = 4;
+  // column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
+  task.v1.common.Column column = 5;
+  optional google.protobuf.Timestamp scheduled_date = 6;
+}
+
+message CreateTaskResponse {
+  task.v1.common.Task task = 1;
+}
+
+// ---------- MoveTask ----------
+
+message MoveTaskRequest {
+  int32 id = 1;
+  task.v1.common.Column column = 2;
+  // column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
+  optional google.protobuf.Timestamp scheduled_date = 3;
+  // position 未指定時はカラム末尾に配置される
+  optional int32 position = 4;
+}
+
+message MoveTaskResponse {
+  task.v1.common.Task task = 1;
+}
+
+// ---------- EditTask ----------
+
+// EditTaskRequest は部分更新のリクエスト
+// 空文字 / PRIORITY_UNSPECIFIED のフィールドは更新対象外
+message EditTaskRequest {
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  task.v1.common.Priority priority = 4;
+}
+
+message EditTaskResponse {
+  task.v1.common.Task task = 1;
+}
+
+// ---------- DeleteTask ----------
+
+message DeleteTaskRequest {
+  int32 id = 1;
+}
+
+message DeleteTaskResponse {}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package task.v1.common;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "task-management-app/protobuf/gen/task/v1/common;commonpb";
+
+// Priority はタスクの優先度
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_MEDIUM = 2;
+  PRIORITY_HIGH = 3;
+}
+
+// Status はタスクのステータス
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_PROGRESS = 2;
+  STATUS_COMPLETED = 3;
+}
+
+// Column はカンバンボードの列種別
+// COLUMN_DATE の場合、Task / 関連リクエストの scheduled_date が割当先の日付を表す
+enum Column {
+  COLUMN_UNSPECIFIED = 0;
+  COLUMN_UNASSIGNED = 1;
+  COLUMN_COMPLETED = 2;
+  COLUMN_DATE = 3;
+}
+
+// Task はタスクの共通表現
+// commandサービスのレスポンス、queryサービスのレスポンス共通で使用する
+message Task {
+  int32 id = 1;
+  int32 user_id = 2;
+  string title = 3;
+  string description = 4;
+  Priority priority = 5;
+  Status status = 6;
+  // scheduled_date はタスク割当日（未割当・完了列の場合は未設定）
+  optional google.protobuf.Timestamp scheduled_date = 7;
+  int32 position = 8;
+  optional google.protobuf.Timestamp completed_at = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}

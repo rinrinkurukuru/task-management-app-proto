@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package task.v1.query;
+
+import "google/protobuf/timestamp.proto";
+import "task/v1/common/task.proto";
+
+option go_package = "task-management-app/protobuf/gen/task/v1/query;querypb";
+
+// TaskQueryService はタスクの読み取り専用サービス
+service TaskQueryService {
+  // ListTasks はタスク一覧を取得する
+  // date 未指定 → ユーザーの全タスク
+  // date 指定   → その日付を含む週のタスク
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
+
+  // GetTask はタスクを 1 件取得する
+  rpc GetTask(GetTaskRequest) returns (GetTaskResponse);
+}
+
+// ---------- ListTasks ----------
+
+message ListTasksRequest {
+  int32 user_id = 1;
+  // date 指定時は当該日付を含む週（月〜日 等の実装側ルール）のタスクのみ返す
+  optional google.protobuf.Timestamp date = 2;
+}
+
+message ListTasksResponse {
+  repeated task.v1.common.Task tasks = 1;
+}
+
+// ---------- GetTask ----------
+
+message GetTaskRequest {
+  int32 id = 1;
+}
+
+message GetTaskResponse {
+  task.v1.common.Task task = 1;
+}
