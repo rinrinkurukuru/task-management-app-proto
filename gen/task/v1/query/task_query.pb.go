@@ -7,12 +7,12 @@
 package querypb
 
 import (
+	common "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	common "task-management-app/protobuf/gen/task/v1/common"
 	unsafe "unsafe"
 )
 
@@ -226,7 +226,7 @@ const file_task_v1_query_task_query_proto_rawDesc = "" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task2\x8d\x01\n" +
 	"\fQueryService\x12?\n" +
 	"\x04List\x12\x1a.task.v1.query.ListRequest\x1a\x1b.task.v1.query.ListResponse\x12<\n" +
-	"\x03Get\x12\x19.task.v1.query.GetRequest\x1a\x1a.task.v1.query.GetResponseB8Z6task-management-app/protobuf/gen/task/v1/query;querypbb\x06proto3"
+	"\x03Get\x12\x19.task.v1.query.GetRequest\x1a\x1a.task.v1.query.GetResponseBOZMgithub.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/query;querypbb\x06proto3"
 
 var (
 	file_task_v1_query_task_query_proto_rawDescOnce sync.Once

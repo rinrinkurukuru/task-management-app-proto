@@ -1,8 +1,11 @@
-# task-management-app / protobuf
+# task-management-app-proto
 
-タスク管理アプリの gRPC 通信仕様（Protocol Buffers 定義）を管理するリポジトリ。
+タスク管理アプリの gRPC 通信仕様（Protocol Buffers 定義）を管理する独立リポジトリ。
 
-API は CQRS 構成で client / command / query の 3 コンテナに分割される予定で、本リポジトリはそのコンテナ間通信のスキーマを単一の正として扱う。
+- リポジトリ: `https://github.com/rinrinkurukuru/task-management-app-proto`
+- Go モジュールパス: `github.com/rinrinkurukuru/task-management-app-proto`
+
+API は CQRS 構成で client / command / query の 3 コンテナに分割される予定で、本リポジトリはそのコンテナ間通信のスキーマを単一の正として扱う。各サービスはこのモジュールを `go get` で取り込み、`gen/` 配下の生成済み Go コードを利用する。
 
 ## ディレクトリ構成
 
@@ -87,13 +90,13 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 ### 2. Go モジュール初期化（初回のみ）
 
-protobuf ディレクトリ単独でモジュールとして扱う。リポジトリルートでは `go.work` で api と一緒に束ねる。
+このリポジトリは `github.com/rinrinkurukuru/task-management-app-proto` という独立モジュール。ローカル開発時はモノレポ側で `go.work` を使って api と一緒に束ねる。
 
 ```sh
 # protobuf/ 配下で実行
-go mod init task-management-app/protobuf
+go mod init github.com/rinrinkurukuru/task-management-app-proto
 
-# リポジトリルートで実行
+# モノレポルートで実行（ローカル開発のみ。本番ビルドでは使わない）
 go work init ./api ./protobuf
 ```
 
@@ -104,8 +107,8 @@ protobuf ディレクトリ直下で以下を実行：
 ```sh
 protoc \
   -I=proto \
-  --go_out=. --go_opt=module=task-management-app/protobuf \
-  --go-grpc_out=. --go-grpc_opt=module=task-management-app/protobuf \
+  --go_out=. --go_opt=module=github.com/rinrinkurukuru/task-management-app-proto \
+  --go-grpc_out=. --go-grpc_opt=module=github.com/rinrinkurukuru/task-management-app-proto \
   $(find proto -name "*.proto")
 ```
 
@@ -142,6 +145,55 @@ protobuf/gen/task/v1/
 
 `gen/` 配下は自動生成物。手で編集しない。
 
+## 各サービスからの利用
+
+### 本番（Cloud Run 等のビルド環境）
+
+各サービスの `go.mod` に依存として追加する：
+
+```sh
+# command / query / client それぞれのサービスディレクトリで実行
+go get github.com/rinrinkurukuru/task-management-app-proto@v0.1.0
+```
+
+import 例：
+
+```go
+import (
+    commonpb  "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common"
+    commandpb "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/command"
+    querypb   "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/query"
+)
+```
+
+### ローカル開発
+
+モノレポ内で `protobuf/` を編集しながら `api/` 側で即座に反映したい場合は `go.work` を使う。各サービスの `go.mod` に書かれたバージョンを上書きして、ローカルディレクトリを参照させる仕組み：
+
+```sh
+# モノレポルート
+go work init ./api ./protobuf
+```
+
+これで `api` 側で import している `github.com/rinrinkurukuru/task-management-app-proto/...` は、リモートの GitHub ではなく**ローカルの `./protobuf` ディレクトリ**を参照するようになる。
+
+ただし `go.work` は **ローカル開発専用** で、本番ビルドでは無効化する：
+
+- Cloud Build / Cloud Run のビルドでは環境変数 `GOWORK=off` を設定
+- もしくは Dockerfile で `go.work` を `COPY` しない
+
+### バージョニング
+
+破壊的変更を入れる際は Git タグでバージョンを切る：
+
+```sh
+# protobuf/ で実行
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+各サービスは必要なタイミングで `go get github.com/rinrinkurukuru/task-management-app-proto@v0.2.0` で更新する。サービス間で異なるバージョンに留まってもよく、ロールアウトを段階的に行える。
+
 ## 開発ガイドライン
 
 ### 互換性
@@ -156,7 +208,7 @@ proto ファイルの変更時は以下を守る：
 ### 命名規則
 
 - パッケージ: `task.v1.<role>`（role は `common` / `command` / `query`）
-- サービス名: `<Domain><Role>Service`（例: `TaskCommandService`）
-- RPC 名: 動詞始まりの PascalCase（`CreateTask`, `ListTasks` 等）
+- サービス名: 役割を表す PascalCase（例: `TaskCommandService` / `QueryService`）
+- RPC 名: 動詞始まりの PascalCase（`Create`, `Move`, `List` 等）
 - メッセージ名: `<RPC名>Request` / `<RPC名>Response`
 - enum: `SCREAMING_SNAKE_CASE` でプレフィックスに enum 名を付ける（例: `PRIORITY_HIGH`）。0 番は `*_UNSPECIFIED` を予約する

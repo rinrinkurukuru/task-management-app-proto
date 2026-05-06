@@ -7,12 +7,12 @@
 package commandpb
 
 import (
+	common "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	common "task-management-app/protobuf/gen/task/v1/common"
 	unsafe "unsafe"
 )
 
@@ -499,7 +499,7 @@ const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\x06Create\x12\x1e.task.v1.command.CreateRequest\x1a\x1f.task.v1.command.CreateResponse\x12C\n" +
 	"\x04Move\x12\x1c.task.v1.command.MoveRequest\x1a\x1d.task.v1.command.MoveResponse\x12C\n" +
 	"\x04Edit\x12\x1c.task.v1.command.EditRequest\x1a\x1d.task.v1.command.EditResponse\x12I\n" +
-	"\x06Delete\x12\x1e.task.v1.command.DeleteRequest\x1a\x1f.task.v1.command.DeleteResponseB<Z:task-management-app/protobuf/gen/task/v1/command;commandpbb\x06proto3"
+	"\x06Delete\x12\x1e.task.v1.command.DeleteRequest\x1a\x1f.task.v1.command.DeleteResponseBSZQgithub.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/command;commandpbb\x06proto3"
 
 var (
 	file_task_v1_command_task_command_proto_rawDescOnce sync.Once

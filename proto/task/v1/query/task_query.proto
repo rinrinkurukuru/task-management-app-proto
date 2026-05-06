@@ -5,7 +5,7 @@ package task.v1.query;
 import "google/protobuf/timestamp.proto";
 import "task/v1/common/task.proto";
 
-option go_package = "task-management-app/protobuf/gen/task/v1/query;querypb";
+option go_package = "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/query;querypb";
 
 // タスクの読み取り専用サービス
 service QueryService {

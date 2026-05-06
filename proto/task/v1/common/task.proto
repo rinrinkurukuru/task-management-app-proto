@@ -4,7 +4,7 @@ package task.v1.common;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "task-management-app/protobuf/gen/task/v1/common;commonpb";
+option go_package = "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common;commonpb";
 
 // Priority はタスクの優先度
 enum Priority {

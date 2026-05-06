@@ -1,4 +1,4 @@
-module task-management-app/protobuf
+module github.com/rinrinkurukuru/task-management-app-proto
 
 go 1.26.2
 

@@ -345,7 +345,7 @@ const file_task_v1_common_task_proto_rawDesc = "" +
 	"\x12COLUMN_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11COLUMN_UNASSIGNED\x10\x01\x12\x14\n" +
 	"\x10COLUMN_COMPLETED\x10\x02\x12\x0f\n" +
-	"\vCOLUMN_DATE\x10\x03B:Z8task-management-app/protobuf/gen/task/v1/common;commonpbb\x06proto3"
+	"\vCOLUMN_DATE\x10\x03BQZOgithub.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common;commonpbb\x06proto3"
 
 var (
 	file_task_v1_common_task_proto_rawDescOnce sync.Once
