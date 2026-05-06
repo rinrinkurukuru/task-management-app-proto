@@ -7,24 +7,24 @@ import "task/v1/common/task.proto";
 
 option go_package = "task-management-app/protobuf/gen/task/v1/command;commandpb";
 
-// TaskCommandService はタスクの作成・更新・削除を担うコマンド側サービス
+// タスクの作成・更新・削除を担うコマンド側サービス
 service TaskCommandService {
-  // CreateTask はタスクを新規作成する
-  rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+  // タスクを新規作成する
+  rpc Create(CreateRequest) returns (CreateResponse);
 
-  // MoveTask はタスクを別カラム/別ポジションへ移動する
-  rpc MoveTask(MoveTaskRequest) returns (MoveTaskResponse);
+  // タスクを別カラム/別ポジションへ移動する
+  rpc Move(MoveRequest) returns (MoveResponse);
 
-  // EditTask はタスクのタイトル/説明/優先度を編集する
-  rpc EditTask(EditTaskRequest) returns (EditTaskResponse);
+  // タスクのタイトル/説明/優先度を編集する
+  rpc Edit(EditRequest) returns (EditResponse);
 
-  // DeleteTask はタスクを削除する
-  rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse);
+  // タスクを削除する
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
 }
 
-// ---------- CreateTask ----------
+// ---------- Create ----------
 
-message CreateTaskRequest {
+message CreateRequest {
   int32 user_id = 1;
   string title = 2;
   string description = 3;
@@ -35,13 +35,13 @@ message CreateTaskRequest {
   optional google.protobuf.Timestamp scheduled_date = 6;
 }
 
-message CreateTaskResponse {
+message CreateResponse {
   task.v1.common.Task task = 1;
 }
 
-// ---------- MoveTask ----------
+// ---------- Move ----------
 
-message MoveTaskRequest {
+message MoveRequest {
   int32 id = 1;
   task.v1.common.Column column = 2;
   // column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
@@ -50,29 +50,29 @@ message MoveTaskRequest {
   optional int32 position = 4;
 }
 
-message MoveTaskResponse {
+message MoveResponse {
   task.v1.common.Task task = 1;
 }
 
-// ---------- EditTask ----------
+// ---------- Edit ----------
 
-// EditTaskRequest は部分更新のリクエスト
+// EditRequest は部分更新のリクエスト
 // 空文字 / PRIORITY_UNSPECIFIED のフィールドは更新対象外
-message EditTaskRequest {
+message EditRequest {
   int32 id = 1;
   string title = 2;
   string description = 3;
   task.v1.common.Priority priority = 4;
 }
 
-message EditTaskResponse {
+message EditResponse {
   task.v1.common.Task task = 1;
 }
 
 // ---------- DeleteTask ----------
 
-message DeleteTaskRequest {
+message DeleteRequest {
   int32 id = 1;
 }
 
-message DeleteTaskResponse {}
+message DeleteResponse {}

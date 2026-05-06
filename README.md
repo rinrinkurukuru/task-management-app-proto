@@ -29,19 +29,19 @@ protobuf/
 
 | RPC | 説明 |
 | --- | --- |
-| `CreateTask` | タスクを新規作成する |
-| `MoveTask` | タスクを別カラム / 別ポジションへ移動する |
-| `EditTask` | タスクのタイトル / 説明 / 優先度を編集する |
-| `DeleteTask` | タスクを削除する |
+| `Create` | タスクを新規作成する |
+| `Move` | タスクを別カラム / 別ポジションへ移動する |
+| `Edit` | タスクのタイトル / 説明 / 優先度を編集する |
+| `Delete` | タスクを削除する |
 
-### TaskQueryService（読み取り）
+### QueryService（読み取り）
 
 `task/v1/query/task_query.proto`
 
 | RPC | 説明 |
 | --- | --- |
-| `ListTasks` | タスク一覧を取得する（`date` 指定時はその週のタスクのみ） |
-| `GetTask` | タスクを 1 件取得する |
+| `List` | タスク一覧を取得する（`date` 指定時はその週のタスクのみ） |
+| `Get` | タスクを 1 件取得する |
 
 ### 共通型
 
@@ -64,7 +64,83 @@ protobuf/
 
 - **client コンテナ** — API の入り口。HTTP リクエストを受け、command / query への gRPC 呼び出しにルーティングし、レスポンスを JSON へ変換する
 - **command コンテナ** — `TaskCommandService` を実装。書き込み系の処理を担う
-- **query コンテナ** — `TaskQueryService` を実装。読み取り専用の処理を担う
+- **query コンテナ** — `QueryService` を実装。読み取り専用の処理を担う
+
+## コード生成（pb ファイルの作成手順）
+
+proto ファイルを編集したら、以下の手順で Go の pb コードを再生成する。
+
+### 前提
+
+- `protoc` がインストールされていること（macOS の場合 `brew install protobuf`）
+- Go 1.21 以上
+- `$(go env GOPATH)/bin` に `PATH` が通っていること
+
+### 1. プラグインのインストール（初回のみ）
+
+```sh
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
+
+`protoc-gen-go` / `protoc-gen-go-grpc` が `~/go/bin/` に配置される。`protoc` はビルド時にこれらを `PATH` から探すため、シェル設定で `export PATH="$PATH:$(go env GOPATH)/bin"` を入れておくこと。
+
+### 2. Go モジュール初期化（初回のみ）
+
+protobuf ディレクトリ単独でモジュールとして扱う。リポジトリルートでは `go.work` で api と一緒に束ねる。
+
+```sh
+# protobuf/ 配下で実行
+go mod init task-management-app/protobuf
+
+# リポジトリルートで実行
+go work init ./api ./protobuf
+```
+
+### 3. pb ファイル生成
+
+protobuf ディレクトリ直下で以下を実行：
+
+```sh
+protoc \
+  -I=proto \
+  --go_out=. --go_opt=module=task-management-app/protobuf \
+  --go-grpc_out=. --go-grpc_opt=module=task-management-app/protobuf \
+  $(find proto -name "*.proto")
+```
+
+各オプションの意味：
+
+| オプション | 役割 |
+| --- | --- |
+| `-I=proto` | import パスの解決基点。`task/v1/common/task.proto` という import 文を proto ディレクトリ起点で探す |
+| `--go_out=.` | メッセージ用 `.pb.go` の出力先（カレント） |
+| `--go-grpc_out=.` | サービス用 `_grpc.pb.go` の出力先 |
+| `--go_opt=module=...` / `--go-grpc_opt=module=...` | 各 proto の `option go_package` で指定したパスから、このモジュール名プレフィックス分を取り除いた相対パスに出力する。これで `gen/task/v1/...` 配下に正しく展開される |
+| `$(find proto -name "*.proto")` | サブディレクトリも含めて全 proto を対象にする（`proto/*.proto` だと再帰しないので注意） |
+
+### 4. 依存モジュールの解決
+
+```sh
+go mod tidy
+```
+
+生成された pb コードが `google.golang.org/grpc` / `google.golang.org/protobuf` などに依存しているため、初回および依存追加時は必ず実行する。
+
+### 5. 生成物の配置
+
+```
+protobuf/gen/task/v1/
+├── common/task.pb.go               # メッセージ・enum
+├── command/
+│   ├── task_command.pb.go          # メッセージ
+│   └── task_command_grpc.pb.go     # サービス（client / server stub）
+└── query/
+    ├── task_query.pb.go            # メッセージ
+    └── task_query_grpc.pb.go       # サービス（client / server stub）
+```
+
+`gen/` 配下は自動生成物。手で編集しない。
 
 ## 開発ガイドライン
 
