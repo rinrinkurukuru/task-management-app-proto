@@ -34,7 +34,8 @@ enum Column {
 // Task はタスクの共通表現
 // commandサービスのレスポンス、queryサービスのレスポンス共通で使用する
 message Task {
-  int32 id = 1;
+  // ULID（Crockford Base32, 26 文字固定）。アプリケーション側で採番する
+  string id = 1;
   int32 user_id = 2;
   string title = 3;
   string description = 4;

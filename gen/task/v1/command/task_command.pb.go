@@ -155,7 +155,7 @@ func (x *CreateResponse) GetTask() *common.Task {
 
 type MoveRequest struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
-	Id     int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Column common.Column          `protobuf:"varint,2,opt,name=column,proto3,enum=task.v1.common.Column" json:"column,omitempty"`
 	// column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
 	ScheduledDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=scheduled_date,json=scheduledDate,proto3,oneof" json:"scheduled_date,omitempty"`
@@ -195,11 +195,11 @@ func (*MoveRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_command_task_command_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MoveRequest) GetId() int32 {
+func (x *MoveRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *MoveRequest) GetColumn() common.Column {
@@ -271,7 +271,7 @@ func (x *MoveResponse) GetTask() *common.Task {
 // 空文字 / PRIORITY_UNSPECIFIED のフィールドは更新対象外
 type EditRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Priority      common.Priority        `protobuf:"varint,4,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
@@ -309,11 +309,11 @@ func (*EditRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_command_task_command_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *EditRequest) GetId() int32 {
+func (x *EditRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *EditRequest) GetTitle() string {
@@ -383,7 +383,7 @@ func (x *EditResponse) GetTask() *common.Task {
 
 type DeleteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -418,11 +418,11 @@ func (*DeleteRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_command_task_command_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *DeleteRequest) GetId() int32 {
+func (x *DeleteRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 type DeleteResponse struct {
@@ -477,7 +477,7 @@ const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\x0eCreateResponse\x12(\n" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"\xd6\x01\n" +
 	"\vMoveRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12.\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
 	"\x06column\x18\x02 \x01(\x0e2\x16.task.v1.common.ColumnR\x06column\x12F\n" +
 	"\x0escheduled_date\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rscheduledDate\x88\x01\x01\x12\x1f\n" +
 	"\bposition\x18\x04 \x01(\x05H\x01R\bposition\x88\x01\x01B\x11\n" +
@@ -486,14 +486,14 @@ const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\fMoveResponse\x12(\n" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"\x8b\x01\n" +
 	"\vEditRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x124\n" +
 	"\bpriority\x18\x04 \x01(\x0e2\x18.task.v1.common.PriorityR\bpriority\"8\n" +
 	"\fEditResponse\x12(\n" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"\x1f\n" +
 	"\rDeleteRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\"\x10\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x10\n" +
 	"\x0eDeleteResponse2\xb4\x02\n" +
 	"\x12TaskCommandService\x12I\n" +
 	"\x06Create\x12\x1e.task.v1.command.CreateRequest\x1a\x1f.task.v1.command.CreateResponse\x12C\n" +

@@ -42,7 +42,7 @@ message CreateResponse {
 // ---------- Move ----------
 
 message MoveRequest {
-  int32 id = 1;
+  string id = 1;
   task.v1.common.Column column = 2;
   // column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
   optional google.protobuf.Timestamp scheduled_date = 3;
@@ -59,7 +59,7 @@ message MoveResponse {
 // EditRequest は部分更新のリクエスト
 // 空文字 / PRIORITY_UNSPECIFIED のフィールドは更新対象外
 message EditRequest {
-  int32 id = 1;
+  string id = 1;
   string title = 2;
   string description = 3;
   task.v1.common.Priority priority = 4;
@@ -72,7 +72,7 @@ message EditResponse {
 // ---------- DeleteTask ----------
 
 message DeleteRequest {
-  int32 id = 1;
+  string id = 1;
 }
 
 message DeleteResponse {}

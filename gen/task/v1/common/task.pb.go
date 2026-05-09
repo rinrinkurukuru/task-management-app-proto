@@ -185,13 +185,14 @@ func (Column) EnumDescriptor() ([]byte, []int) {
 // Task はタスクの共通表現
 // commandサービスのレスポンス、queryサービスのレスポンス共通で使用する
 type Task struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	Id          int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId      int32                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Title       string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Description string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Priority    Priority               `protobuf:"varint,5,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
-	Status      Status                 `protobuf:"varint,6,opt,name=status,proto3,enum=task.v1.common.Status" json:"status,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ULID（Crockford Base32, 26 文字固定）。アプリケーション側で採番する
+	Id          string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId      int32    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Title       string   `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Description string   `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Priority    Priority `protobuf:"varint,5,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
+	Status      Status   `protobuf:"varint,6,opt,name=status,proto3,enum=task.v1.common.Status" json:"status,omitempty"`
 	// scheduled_date はタスク割当日（未割当・完了列の場合は未設定）
 	ScheduledDate *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=scheduled_date,json=scheduledDate,proto3,oneof" json:"scheduled_date,omitempty"`
 	Position      int32                  `protobuf:"varint,8,opt,name=position,proto3" json:"position,omitempty"`
@@ -232,11 +233,11 @@ func (*Task) Descriptor() ([]byte, []int) {
 	return file_task_v1_common_task_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Task) GetId() int32 {
+func (x *Task) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *Task) GetUserId() int32 {
@@ -315,7 +316,7 @@ const file_task_v1_common_task_proto_rawDesc = "" +
 	"\n" +
 	"\x19task/v1/common/task.proto\x12\x0etask.v1.common\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8f\x04\n" +
 	"\x04Task\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x05R\x06userId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x124\n" +
