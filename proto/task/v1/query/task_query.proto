@@ -33,7 +33,8 @@ message ListResponse {
 // ---------- Get ----------
 
 message GetRequest {
-  int32 id = 1;
+  // ULID（Crockford Base32, 26 文字固定）
+  string id = 1;
 }
 
 message GetResponse {

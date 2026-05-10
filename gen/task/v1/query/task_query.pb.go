@@ -121,8 +121,9 @@ func (x *ListResponse) GetTasks() []*common.Task {
 }
 
 type GetRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ULID（Crockford Base32, 26 文字固定）
+	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -157,11 +158,11 @@ func (*GetRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_query_task_query_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetRequest) GetId() int32 {
+func (x *GetRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 type GetResponse struct {
@@ -221,7 +222,7 @@ const file_task_v1_query_task_query_proto_rawDesc = "" +
 	"\x05tasks\x18\x01 \x03(\v2\x14.task.v1.common.TaskR\x05tasks\"\x1c\n" +
 	"\n" +
 	"GetRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\"7\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"7\n" +
 	"\vGetResponse\x12(\n" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task2\x8d\x01\n" +
 	"\fQueryService\x12?\n" +
