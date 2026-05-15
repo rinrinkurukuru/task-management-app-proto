@@ -6,14 +6,6 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/rinrinkurukuru/task-management-app-proto/gen/task/v1/common;commonpb";
 
-// Priority はタスクの優先度
-enum Priority {
-  PRIORITY_UNSPECIFIED = 0;
-  PRIORITY_LOW = 1;
-  PRIORITY_MEDIUM = 2;
-  PRIORITY_HIGH = 3;
-}
-
 // Status はタスクのステータス
 enum Status {
   STATUS_UNSPECIFIED = 0;
@@ -39,7 +31,6 @@ message Task {
   int32 user_id = 2;
   string title = 3;
   string description = 4;
-  Priority priority = 5;
   Status status = 6;
   // scheduled_date はタスク割当日（未割当・完了列の場合は未設定）
   optional google.protobuf.Timestamp scheduled_date = 7;

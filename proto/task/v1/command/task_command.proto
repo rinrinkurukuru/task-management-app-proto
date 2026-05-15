@@ -28,8 +28,6 @@ message CreateRequest {
   int32 user_id = 1;
   string title = 2;
   string description = 3;
-  // priority 未指定時は medium が採用される（サーバー側のデフォルト）
-  task.v1.common.Priority priority = 4;
   // column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
   task.v1.common.Column column = 5;
   optional google.protobuf.Timestamp scheduled_date = 6;
@@ -62,7 +60,6 @@ message EditRequest {
   string id = 1;
   string title = 2;
   string description = 3;
-  task.v1.common.Priority priority = 4;
 }
 
 message EditResponse {
