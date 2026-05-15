@@ -28,8 +28,6 @@ type CreateRequest struct {
 	UserId      int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Title       string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// priority 未指定時は medium が採用される（サーバー側のデフォルト）
-	Priority common.Priority `protobuf:"varint,4,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
 	// column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
 	Column        common.Column          `protobuf:"varint,5,opt,name=column,proto3,enum=task.v1.common.Column" json:"column,omitempty"`
 	ScheduledDate *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=scheduled_date,json=scheduledDate,proto3,oneof" json:"scheduled_date,omitempty"`
@@ -86,13 +84,6 @@ func (x *CreateRequest) GetDescription() string {
 		return x.Description
 	}
 	return ""
-}
-
-func (x *CreateRequest) GetPriority() common.Priority {
-	if x != nil {
-		return x.Priority
-	}
-	return common.Priority(0)
 }
 
 func (x *CreateRequest) GetColumn() common.Column {
@@ -274,7 +265,6 @@ type EditRequest struct {
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Priority      common.Priority        `protobuf:"varint,4,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -328,13 +318,6 @@ func (x *EditRequest) GetDescription() string {
 		return x.Description
 	}
 	return ""
-}
-
-func (x *EditRequest) GetPriority() common.Priority {
-	if x != nil {
-		return x.Priority
-	}
-	return common.Priority(0)
 }
 
 type EditResponse struct {
@@ -465,12 +448,11 @@ var File_task_v1_command_task_command_proto protoreflect.FileDescriptor
 
 const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\n" +
-	"\"task/v1/command/task_command.proto\x12\x0ftask.v1.command\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19task/v1/common/task.proto\"\xa1\x02\n" +
+	"\"task/v1/command/task_command.proto\x12\x0ftask.v1.command\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19task/v1/common/task.proto\"\xeb\x01\n" +
 	"\rCreateRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x05R\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x124\n" +
-	"\bpriority\x18\x04 \x01(\x0e2\x18.task.v1.common.PriorityR\bpriority\x12.\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12.\n" +
 	"\x06column\x18\x05 \x01(\x0e2\x16.task.v1.common.ColumnR\x06column\x12F\n" +
 	"\x0escheduled_date\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rscheduledDate\x88\x01\x01B\x11\n" +
 	"\x0f_scheduled_date\":\n" +
@@ -484,12 +466,11 @@ const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\x0f_scheduled_dateB\v\n" +
 	"\t_position\"8\n" +
 	"\fMoveResponse\x12(\n" +
-	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"\x8b\x01\n" +
+	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"U\n" +
 	"\vEditRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x124\n" +
-	"\bpriority\x18\x04 \x01(\x0e2\x18.task.v1.common.PriorityR\bpriority\"8\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\"8\n" +
 	"\fEditResponse\x12(\n" +
 	"\x04task\x18\x01 \x01(\v2\x14.task.v1.common.TaskR\x04task\"\x1f\n" +
 	"\rDeleteRequest\x12\x0e\n" +
@@ -523,34 +504,31 @@ var file_task_v1_command_task_command_proto_goTypes = []any{
 	(*EditResponse)(nil),          // 5: task.v1.command.EditResponse
 	(*DeleteRequest)(nil),         // 6: task.v1.command.DeleteRequest
 	(*DeleteResponse)(nil),        // 7: task.v1.command.DeleteResponse
-	(common.Priority)(0),          // 8: task.v1.common.Priority
-	(common.Column)(0),            // 9: task.v1.common.Column
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
-	(*common.Task)(nil),           // 11: task.v1.common.Task
+	(common.Column)(0),            // 8: task.v1.common.Column
+	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(*common.Task)(nil),           // 10: task.v1.common.Task
 }
 var file_task_v1_command_task_command_proto_depIdxs = []int32{
-	8,  // 0: task.v1.command.CreateRequest.priority:type_name -> task.v1.common.Priority
-	9,  // 1: task.v1.command.CreateRequest.column:type_name -> task.v1.common.Column
-	10, // 2: task.v1.command.CreateRequest.scheduled_date:type_name -> google.protobuf.Timestamp
-	11, // 3: task.v1.command.CreateResponse.task:type_name -> task.v1.common.Task
-	9,  // 4: task.v1.command.MoveRequest.column:type_name -> task.v1.common.Column
-	10, // 5: task.v1.command.MoveRequest.scheduled_date:type_name -> google.protobuf.Timestamp
-	11, // 6: task.v1.command.MoveResponse.task:type_name -> task.v1.common.Task
-	8,  // 7: task.v1.command.EditRequest.priority:type_name -> task.v1.common.Priority
-	11, // 8: task.v1.command.EditResponse.task:type_name -> task.v1.common.Task
-	0,  // 9: task.v1.command.TaskCommandService.Create:input_type -> task.v1.command.CreateRequest
-	2,  // 10: task.v1.command.TaskCommandService.Move:input_type -> task.v1.command.MoveRequest
-	4,  // 11: task.v1.command.TaskCommandService.Edit:input_type -> task.v1.command.EditRequest
-	6,  // 12: task.v1.command.TaskCommandService.Delete:input_type -> task.v1.command.DeleteRequest
-	1,  // 13: task.v1.command.TaskCommandService.Create:output_type -> task.v1.command.CreateResponse
-	3,  // 14: task.v1.command.TaskCommandService.Move:output_type -> task.v1.command.MoveResponse
-	5,  // 15: task.v1.command.TaskCommandService.Edit:output_type -> task.v1.command.EditResponse
-	7,  // 16: task.v1.command.TaskCommandService.Delete:output_type -> task.v1.command.DeleteResponse
-	13, // [13:17] is the sub-list for method output_type
-	9,  // [9:13] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	8,  // 0: task.v1.command.CreateRequest.column:type_name -> task.v1.common.Column
+	9,  // 1: task.v1.command.CreateRequest.scheduled_date:type_name -> google.protobuf.Timestamp
+	10, // 2: task.v1.command.CreateResponse.task:type_name -> task.v1.common.Task
+	8,  // 3: task.v1.command.MoveRequest.column:type_name -> task.v1.common.Column
+	9,  // 4: task.v1.command.MoveRequest.scheduled_date:type_name -> google.protobuf.Timestamp
+	10, // 5: task.v1.command.MoveResponse.task:type_name -> task.v1.common.Task
+	10, // 6: task.v1.command.EditResponse.task:type_name -> task.v1.common.Task
+	0,  // 7: task.v1.command.TaskCommandService.Create:input_type -> task.v1.command.CreateRequest
+	2,  // 8: task.v1.command.TaskCommandService.Move:input_type -> task.v1.command.MoveRequest
+	4,  // 9: task.v1.command.TaskCommandService.Edit:input_type -> task.v1.command.EditRequest
+	6,  // 10: task.v1.command.TaskCommandService.Delete:input_type -> task.v1.command.DeleteRequest
+	1,  // 11: task.v1.command.TaskCommandService.Create:output_type -> task.v1.command.CreateResponse
+	3,  // 12: task.v1.command.TaskCommandService.Move:output_type -> task.v1.command.MoveResponse
+	5,  // 13: task.v1.command.TaskCommandService.Edit:output_type -> task.v1.command.EditResponse
+	7,  // 14: task.v1.command.TaskCommandService.Delete:output_type -> task.v1.command.DeleteResponse
+	11, // [11:15] is the sub-list for method output_type
+	7,  // [7:11] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_task_v1_command_task_command_proto_init() }
