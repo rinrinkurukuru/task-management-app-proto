@@ -22,6 +22,59 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Priority はタスクの優先度
+type Priority int32
+
+const (
+	Priority_PRIORITY_UNSPECIFIED Priority = 0
+	Priority_PRIORITY_LOW         Priority = 1
+	Priority_PRIORITY_MEDIUM      Priority = 2
+	Priority_PRIORITY_HIGH        Priority = 3
+)
+
+// Enum value maps for Priority.
+var (
+	Priority_name = map[int32]string{
+		0: "PRIORITY_UNSPECIFIED",
+		1: "PRIORITY_LOW",
+		2: "PRIORITY_MEDIUM",
+		3: "PRIORITY_HIGH",
+	}
+	Priority_value = map[string]int32{
+		"PRIORITY_UNSPECIFIED": 0,
+		"PRIORITY_LOW":         1,
+		"PRIORITY_MEDIUM":      2,
+		"PRIORITY_HIGH":        3,
+	}
+)
+
+func (x Priority) Enum() *Priority {
+	p := new(Priority)
+	*p = x
+	return p
+}
+
+func (x Priority) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Priority) Descriptor() protoreflect.EnumDescriptor {
+	return file_task_v1_common_task_proto_enumTypes[0].Descriptor()
+}
+
+func (Priority) Type() protoreflect.EnumType {
+	return &file_task_v1_common_task_proto_enumTypes[0]
+}
+
+func (x Priority) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Priority.Descriptor instead.
+func (Priority) EnumDescriptor() ([]byte, []int) {
+	return file_task_v1_common_task_proto_rawDescGZIP(), []int{0}
+}
+
 // Status はタスクのステータス
 type Status int32
 
@@ -59,11 +112,11 @@ func (x Status) String() string {
 }
 
 func (Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_task_v1_common_task_proto_enumTypes[0].Descriptor()
+	return file_task_v1_common_task_proto_enumTypes[1].Descriptor()
 }
 
 func (Status) Type() protoreflect.EnumType {
-	return &file_task_v1_common_task_proto_enumTypes[0]
+	return &file_task_v1_common_task_proto_enumTypes[1]
 }
 
 func (x Status) Number() protoreflect.EnumNumber {
@@ -72,7 +125,7 @@ func (x Status) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Status.Descriptor instead.
 func (Status) EnumDescriptor() ([]byte, []int) {
-	return file_task_v1_common_task_proto_rawDescGZIP(), []int{0}
+	return file_task_v1_common_task_proto_rawDescGZIP(), []int{1}
 }
 
 // Column はカンバンボードの列種別
@@ -113,11 +166,11 @@ func (x Column) String() string {
 }
 
 func (Column) Descriptor() protoreflect.EnumDescriptor {
-	return file_task_v1_common_task_proto_enumTypes[1].Descriptor()
+	return file_task_v1_common_task_proto_enumTypes[2].Descriptor()
 }
 
 func (Column) Type() protoreflect.EnumType {
-	return &file_task_v1_common_task_proto_enumTypes[1]
+	return &file_task_v1_common_task_proto_enumTypes[2]
 }
 
 func (x Column) Number() protoreflect.EnumNumber {
@@ -126,7 +179,7 @@ func (x Column) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Column.Descriptor instead.
 func (Column) EnumDescriptor() ([]byte, []int) {
-	return file_task_v1_common_task_proto_rawDescGZIP(), []int{1}
+	return file_task_v1_common_task_proto_rawDescGZIP(), []int{2}
 }
 
 // Task はタスクの共通表現
@@ -134,11 +187,12 @@ func (Column) EnumDescriptor() ([]byte, []int) {
 type Task struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ULID（Crockford Base32, 26 文字固定）。アプリケーション側で採番する
-	Id          string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId      int32  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Title       string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Status      Status `protobuf:"varint,6,opt,name=status,proto3,enum=task.v1.common.Status" json:"status,omitempty"`
+	Id          string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId      int32    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Title       string   `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Description string   `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Priority    Priority `protobuf:"varint,5,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
+	Status      Status   `protobuf:"varint,6,opt,name=status,proto3,enum=task.v1.common.Status" json:"status,omitempty"`
 	// scheduled_date はタスク割当日（未割当・完了列の場合は未設定）
 	ScheduledDate *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=scheduled_date,json=scheduledDate,proto3,oneof" json:"scheduled_date,omitempty"`
 	Position      int32                  `protobuf:"varint,8,opt,name=position,proto3" json:"position,omitempty"`
@@ -207,6 +261,13 @@ func (x *Task) GetDescription() string {
 	return ""
 }
 
+func (x *Task) GetPriority() Priority {
+	if x != nil {
+		return x.Priority
+	}
+	return Priority_PRIORITY_UNSPECIFIED
+}
+
 func (x *Task) GetStatus() Status {
 	if x != nil {
 		return x.Status
@@ -253,12 +314,13 @@ var File_task_v1_common_task_proto protoreflect.FileDescriptor
 
 const file_task_v1_common_task_proto_rawDesc = "" +
 	"\n" +
-	"\x19task/v1/common/task.proto\x12\x0etask.v1.common\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd9\x03\n" +
+	"\x19task/v1/common/task.proto\x12\x0etask.v1.common\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8f\x04\n" +
 	"\x04Task\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x05R\x06userId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12.\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x124\n" +
+	"\bpriority\x18\x05 \x01(\x0e2\x18.task.v1.common.PriorityR\bpriority\x12.\n" +
 	"\x06status\x18\x06 \x01(\x0e2\x16.task.v1.common.StatusR\x06status\x12F\n" +
 	"\x0escheduled_date\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rscheduledDate\x88\x01\x01\x12\x1a\n" +
 	"\bposition\x18\b \x01(\x05R\bposition\x12B\n" +
@@ -269,7 +331,12 @@ const file_task_v1_common_task_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x11\n" +
 	"\x0f_scheduled_dateB\x0f\n" +
-	"\r_completed_at*_\n" +
+	"\r_completed_at*^\n" +
+	"\bPriority\x12\x18\n" +
+	"\x14PRIORITY_UNSPECIFIED\x10\x00\x12\x10\n" +
+	"\fPRIORITY_LOW\x10\x01\x12\x13\n" +
+	"\x0fPRIORITY_MEDIUM\x10\x02\x12\x11\n" +
+	"\rPRIORITY_HIGH\x10\x03*_\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eSTATUS_PENDING\x10\x01\x12\x13\n" +
@@ -293,25 +360,27 @@ func file_task_v1_common_task_proto_rawDescGZIP() []byte {
 	return file_task_v1_common_task_proto_rawDescData
 }
 
-var file_task_v1_common_task_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_task_v1_common_task_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_task_v1_common_task_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_task_v1_common_task_proto_goTypes = []any{
-	(Status)(0),                   // 0: task.v1.common.Status
-	(Column)(0),                   // 1: task.v1.common.Column
-	(*Task)(nil),                  // 2: task.v1.common.Task
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(Priority)(0),                 // 0: task.v1.common.Priority
+	(Status)(0),                   // 1: task.v1.common.Status
+	(Column)(0),                   // 2: task.v1.common.Column
+	(*Task)(nil),                  // 3: task.v1.common.Task
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_task_v1_common_task_proto_depIdxs = []int32{
-	0, // 0: task.v1.common.Task.status:type_name -> task.v1.common.Status
-	3, // 1: task.v1.common.Task.scheduled_date:type_name -> google.protobuf.Timestamp
-	3, // 2: task.v1.common.Task.completed_at:type_name -> google.protobuf.Timestamp
-	3, // 3: task.v1.common.Task.created_at:type_name -> google.protobuf.Timestamp
-	3, // 4: task.v1.common.Task.updated_at:type_name -> google.protobuf.Timestamp
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	0, // 0: task.v1.common.Task.priority:type_name -> task.v1.common.Priority
+	1, // 1: task.v1.common.Task.status:type_name -> task.v1.common.Status
+	4, // 2: task.v1.common.Task.scheduled_date:type_name -> google.protobuf.Timestamp
+	4, // 3: task.v1.common.Task.completed_at:type_name -> google.protobuf.Timestamp
+	4, // 4: task.v1.common.Task.created_at:type_name -> google.protobuf.Timestamp
+	4, // 5: task.v1.common.Task.updated_at:type_name -> google.protobuf.Timestamp
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_task_v1_common_task_proto_init() }
@@ -325,7 +394,7 @@ func file_task_v1_common_task_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_task_v1_common_task_proto_rawDesc), len(file_task_v1_common_task_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      3,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
