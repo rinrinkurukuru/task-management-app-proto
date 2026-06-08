@@ -24,8 +24,9 @@ const (
 )
 
 type ListRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	UserId int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// user_id は ULID 文字列（auth サービスで発行される sub クレームと同一）
+	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// date 指定時は当該日付を含む週（月〜日 等の実装側ルール）のタスクのみ返す
 	Date          *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=date,proto3,oneof" json:"date,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -62,11 +63,11 @@ func (*ListRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_query_task_query_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListRequest) GetUserId() int32 {
+func (x *ListRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *ListRequest) GetDate() *timestamppb.Timestamp {
@@ -215,7 +216,7 @@ const file_task_v1_query_task_query_proto_rawDesc = "" +
 	"\n" +
 	"\x1etask/v1/query/task_query.proto\x12\rtask.v1.query\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19task/v1/common/task.proto\"d\n" +
 	"\vListRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x05R\x06userId\x123\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x123\n" +
 	"\x04date\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\x04date\x88\x01\x01B\a\n" +
 	"\x05_date\":\n" +
 	"\fListResponse\x12*\n" +

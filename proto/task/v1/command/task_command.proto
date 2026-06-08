@@ -25,7 +25,8 @@ service TaskCommandService {
 // ---------- Create ----------
 
 message CreateRequest {
-  int32 user_id = 1;
+  // user_id は ULID 文字列（auth サービスで発行される sub クレームと同一）
+  string user_id = 1;
   string title = 2;
   string description = 3;
   // priority 未指定時は medium が採用される（サーバー側のデフォルト）

@@ -36,7 +36,8 @@ enum Column {
 message Task {
   // ULID（Crockford Base32, 26 文字固定）。アプリケーション側で採番する
   string id = 1;
-  int32 user_id = 2;
+  // user_id も ULID 文字列。auth サービスが発行するユーザー ID と同形式
+  string user_id = 2;
   string title = 3;
   string description = 4;
   Priority priority = 5;

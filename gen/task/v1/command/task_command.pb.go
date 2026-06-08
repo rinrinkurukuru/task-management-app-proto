@@ -24,10 +24,11 @@ const (
 )
 
 type CreateRequest struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	UserId      int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Title       string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Description string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// user_id は ULID 文字列（auth サービスで発行される sub クレームと同一）
+	UserId      string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Title       string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	// priority 未指定時は medium が採用される（サーバー側のデフォルト）
 	Priority common.Priority `protobuf:"varint,4,opt,name=priority,proto3,enum=task.v1.common.Priority" json:"priority,omitempty"`
 	// column が COLUMN_DATE の場合のみ scheduled_date を必須で参照する
@@ -67,11 +68,11 @@ func (*CreateRequest) Descriptor() ([]byte, []int) {
 	return file_task_v1_command_task_command_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateRequest) GetUserId() int32 {
+func (x *CreateRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *CreateRequest) GetTitle() string {
@@ -467,7 +468,7 @@ const file_task_v1_command_task_command_proto_rawDesc = "" +
 	"\n" +
 	"\"task/v1/command/task_command.proto\x12\x0ftask.v1.command\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19task/v1/common/task.proto\"\xa1\x02\n" +
 	"\rCreateRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x05R\x06userId\x12\x14\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x124\n" +
 	"\bpriority\x18\x04 \x01(\x0e2\x18.task.v1.common.PriorityR\bpriority\x12.\n" +
