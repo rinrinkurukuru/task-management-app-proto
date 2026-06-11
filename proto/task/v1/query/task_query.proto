@@ -21,7 +21,8 @@ service QueryService {
 // ---------- List ----------
 
 message ListRequest {
-  int32 user_id = 1;
+  // user_id は ULID 文字列（auth サービスで発行される sub クレームと同一）
+  string user_id = 1;
   // date 指定時は当該日付を含む週（月〜日 等の実装側ルール）のタスクのみ返す
   optional google.protobuf.Timestamp date = 2;
 }
